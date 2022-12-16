@@ -5,11 +5,27 @@ conn= LibPQ.Connection("host=localhost port=5432 dbname=test2 user=postgres pass
 
 
 
-result = execute(conn, "SELECT * FROM student")
+result = execute(conn, "SELECT * FROM patients")
+@info columntable(result)
 for raw in result
-	show(raw) 
+	println(raw)
 end
+
 show("completed")
 
+result = execute(conn, """
+		 CREATE TABLE IF NOT EXISTS patients (
+		 	patient_id serial PRIMARY KEY,
+			key varchar(255) UNIQUE NOT NULL)
+			""")
+
+"""
+LibPQ.load!(
+	    (;key = ["12345dasd"]),
+	    conn,
+	    "INSERT INTO patients (key) VALUES (\$1);") 
+
+execute(conn, "COMMIT;") 
+"""
 
 close(conn)
