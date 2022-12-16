@@ -9,7 +9,7 @@ import JSON
 const patient_token = "a642e1c72a5444859567707febfbd65a11c6759c1ce080f48ada67e234209f59"
 # declare rout processor
 # 
-index(req::HTTP.Request) = HTTP.Response(200, "Hello World")
+index(req::HTTP.Request) = HTTP.Response(200, "You've Connectet to the HealthNetServer")
 
 function welcome_user(req::HTTP.Request)
 
@@ -27,7 +27,7 @@ function process_resource(req::HTTP.Request)
 	message = JSON.parse(String(req.body))
 	@info message
 	if message["patient_token"] == patient_token
-		#@async webSocketServer.send(webSocketServer, "Alarm!")
+		put!(webSocketServer.in , "Alarm!")
 		message["server_mark"] = "You're not a Stranger, Help is on the way!"
 		return HTTP.Response(200, JSON.json(message))
 	else 
@@ -44,7 +44,7 @@ HTTP.register!(ROUTER, "GET", "/user/*", welcome_user)
 HTTP.register!(ROUTER, "POST", "/resource/process", process_resource)
 
 
-#webSocketServer = HTTP.WebSockets.listen!("192.168.0.0", 80)
+webSocketServer = HTTP.WebSockets.listen!("127.0.0.0", 12346)
 HTTP.serve(ROUTER, Sockets.localhost, 8080)
 
 
