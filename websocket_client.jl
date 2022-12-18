@@ -3,7 +3,7 @@
 import HTTP
 import HTTP.WebSockets as WebSockets
 
-const HOST = "127.0.0.0"
+const HOST = "0.0.0.0"
 const PORT = "12346"
 
 

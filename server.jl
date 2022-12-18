@@ -20,20 +20,34 @@ function welcome_user(req::HTTP.Request)
 	return HTTP.Response(200, "Hello " * user)
 end
 
+"""
+Send message to WebSocketServer through tcp 
+"""
+function send_message()  
+	tcp_client = Sockets.connect(2000)
+	@async while isopen(tcp_client)
+		write(tcp_client, "Alarm!")
+		close(tcp_client)
+	end
+end
+
 # Parse JSON
 #
-function process_resource(req::HTTP.Request)
+function process_resource(req::HTTP.Request) where T
 
 	message = JSON.parse(String(req.body))
 	@info message
 	if message["patient_token"] == patient_token
-		put!(webSocketServer.in , "Alarm!")
 		message["server_mark"] = "You're not a Stranger, Help is on the way!"
+		@async send_message()
+
+		
 		return HTTP.Response(200, JSON.json(message))
 	else 
 		return HTTP.Response(401, "Unauthorized")
 	end
 end
+
 
 
 # Register routes and processors
@@ -44,7 +58,8 @@ HTTP.register!(ROUTER, "GET", "/user/*", welcome_user)
 HTTP.register!(ROUTER, "POST", "/resource/process", process_resource)
 
 
-webSocketServer = HTTP.WebSockets.listen!("127.0.0.0", 12346)
+
+
 HTTP.serve(ROUTER, Sockets.localhost, 8080)
 
 
