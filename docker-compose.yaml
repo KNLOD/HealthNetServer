@@ -10,4 +10,29 @@ services:
       - POSTGRES_USER=admin
     image: postgres:14.3-alpine
 
+  julia_http_server:
+    container_name: julia_http_server
+    expose: 
+      - 2000
+    ports:
+      - "8080:8080"
+    image: knlod/simple_julia:latest
+    networks: 
+      - gateway
+
+  julia_websocket_server:
+    container_name: julia_websocket_server
+    expose:
+      - 2000
+    ports:
+      - "12346:12346"
+    image: knlod/websockets_server
+    networks:
+      - gateway
+
+
+networks:
+  gateway: {}
+
+
 

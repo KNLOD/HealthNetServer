@@ -2,12 +2,13 @@
 # Client for sending requests
 
 
+import Sockets
 import HTTP
 import SHA
 import JSON.json
 
 const PORT = "8080"
-const HOST = "127.0.0.1"
+const HOST = "0.0.0.0"
 const NAME = "KNLOD"
 
 # Document format

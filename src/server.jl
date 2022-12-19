@@ -60,7 +60,7 @@ HTTP.register!(ROUTER, "POST", "/resource/process", process_resource)
 
 
 
-HTTP.serve(ROUTER, Sockets.localhost, 8080)
+HTTP.serve(ROUTER, "0.0.0.0", 8080)
 
 
 
