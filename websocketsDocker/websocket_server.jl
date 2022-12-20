@@ -6,7 +6,7 @@ import HTTP.WebSockets
 webSocketServer = HTTP.WebSockets.listen("0.0.0.0", 12346) do ws
 	HTTP.WebSockets.send(ws, "Alarm!")
 	begin
-		tcp_server = listen(getaddrinfo("julia_http_server"), 2000)
+		tcp_server = listen(2000)
 		while true 
 			show("Im here")
 			sock = accept(tcp_server)

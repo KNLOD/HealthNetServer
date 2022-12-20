@@ -12,27 +12,20 @@ services:
 
   julia_http_server:
     container_name: julia_http_server
-    expose: 
-      - 2000
     ports:
       - "8080:8080"
     image: knlod/simple_julia:latest
-    networks: 
-      - gateway
 
   julia_websocket_server:
     container_name: julia_websocket_server
-    expose:
-      - 2000
     ports:
+      - "2000:2000"
       - "12346:12346"
     image: knlod/websockets_server
-    networks:
-      - gateway
+    depends_on: 
+      - julia_http_server
 
 
-networks:
-  gateway: {}
 
 
 

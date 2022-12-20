@@ -1,5 +1,6 @@
 #!/usr/bin/env julia --project=@.
 
+include("LocalDataSource.jl")
 import Sockets
 import HTTP
 import HTTP.WebSockets 
@@ -37,7 +38,8 @@ function process_resource(req::HTTP.Request) where T
 
 	message = JSON.parse(String(req.body))
 	@info message
-	if message["patient_token"] == patient_token
+	patient_token = message["patient_token"]
+	if is_patient_in_db(patient_token)
 		message["server_mark"] = "You're not a Stranger, Help is on the way!"
 		@async send_message()
 
